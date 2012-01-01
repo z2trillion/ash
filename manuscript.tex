@@ -133,32 +133,127 @@ $\ast$ E-mail: wmliang@berkeley.edu
 Estimating admixture histories is crucial for understanding the genetic diversity we see in present-day populations. Existing allele frequency or phylogeny-based methods are excellent for inferring the existence of admixture or its proportions, but have less power for estimating admixture times. Recently introduced approaches for estimating these times use spatial information from admixed chromosomes, such as the local ancestry or the decay of admixture linkage disequilibrium (ALD).  One popular method, implemented in the programs ALDER and ROLOFF, uses two-locus ALD to infer the time of a single admixture event, but is only able to estimate the time of the most recent admixture event based on this summary statistic.  We derive analytical expressions for the expected ALD in a three-locus system and provide a new statistical method based on these results that is able to resolve more complicated admixture histories. Using simulations, we show how this new statistic behaves on a range of admixture histories. As an example, we also apply our method to the Colombian and Mexican samples from the 1000 Genomes project.
 
 \section*{Introduction}
-There are many methods for inferring the presence of admixture, e.g. methods using simple summary statistics detecting deviations from phylogenetic symmetry \cite{reich2009reconstructing} [Also cite patterson paper and paper from Monty's group] , methods estimating admixture proportions with programs such as Structure \cite{pritchard2000inference},  Admixture \cite{alexander2009fast} or RFmic [cite] [comment: we might want to make sure to add more citations here, for example all the ones from our previous papers and the ones from the ALDER paper.  People like to see themselves cited]. However, there has been less research on estimating admixture times, possibly because such methods require data which were unavailable until the advent of high-throughput next generation sequencing. Some recently developed methods use the inferred local ancestry of sequences to construct admixture tract length distributions [cite Pool Nielsen, Gravel and yourself]. Over time, recombination is expected to decrease the average lengths of admixture tracts. The length distribution of admixture tracts is therefore informative about the time since admixture.  Much of the theory relating to tracts lengths is based on Fisher's famous theory of junctions \cite{fisher1949theory} and subsequent work by Stam \cite{stam1980distribution} and others [add as many citations here as possible]. For example, \cite{baird2003distribution} first discussed the length distribution of tracts descended from a single ancestor. These results informed later analyses of admixture tract length distribution, such as \cite{pool2009inference}, \cite{gravel2012population}, and \cite{liang2014lengths}. \cite{gravel2012population} also implemented the software program TRACTS, which estimates admixture histories by fitting the tract length distribution, obtained by local ancestry inference, to a exponential approximation.
+There are many methods for inferring the presence of admixture, e.g. methods
+using simple summary statistics detecting deviations from phylogenetic symmetry
+\cite{reich2009reconstructing} [TODO(mason) Also cite patterson paper and paper
+from Monty's group], methods estimating admixture proportions with programs such
+as Structure \cite{pritchard2000inference}, Admixture \cite{alexander2009fast}
+or RFmic [cite] [TODO comment: we might want to make sure to add more citations
+here, for example all the ones from our previous papers and the ones from the
+ALDER paper. People like to see themselves cited]. However, there has been less
+research on estimating admixture times, possibly because such methods require
+data which were unavailable until the advent of high-throughput next generation
+sequencing. Some recently developed methods use the inferred local ancestry of
+sequences to construct admixture tract length distributions [TODO cite Pool Nielsen,
+Gravel and yourself]. Over time, recombination is expected to decrease the
+average lengths of admixture tracts. The length distribution of admixture tracts
+is therefore informative about the time since admixture.  Much of the theory
+relating to tracts lengths is based on Fisher's famous theory of junctions
+\cite{fisher1949theory} and subsequent work by Stam \cite{stam1980distribution}
+and others [TODO add as many citations here as possible]. For example,
+\cite{baird2003distribution} first discussed the length distribution of tracts
+descended from a single ancestor. These results informed later analyses of
+admixture tract length distribution, such as \cite{pool2009inference},
+\cite{gravel2012population}, and \cite{liang2014lengths}.
+\cite{gravel2012population} also implemented the software program TRACTS, which
+estimates admixture histories by fitting the tract length distribution, obtained
+by local ancestry inference, to a exponential approximation.
 
-Another approach, which we will follow in this paper, is based on the decay of admixture linkage disequilibrium (ALD). In a well-mixed, genetically isolated human populations, linkage disequilibrium decays to zero on a scale of tenths of centiMorgans. However, when an admixed population is founded, it begins with large of amount of linkage disequilibrium, which is a result of the allele frequency differences between the source populations. This occurs even if the LD in the source populations themselves is negligible. The linkage disequilibrium in the admixed population then fluctuates in the generations after its founding, decreasing as a result of drift and recombination, or increasing because of additional waves of migration. From the LD present in a modern day admixed population, it is possible to make inferences about the population's admixture history. This insight was first used in the program ROLLOFF \cite{moorjani2011history} and was later extended by ALDER \cite{loh2013inferring}.
+Another approach, which we will follow in this paper, is based on the decay of
+admixture linkage disequilibrium (ALD). In a well-mixed, genetically isolated
+human populations, linkage disequilibrium decays to zero on a scale of tenths of
+centiMorgans. However, when an admixed population is founded, it begins with
+large of amount of linkage disequilibrium, which is a result of the allele
+frequency differences between the source populations. This occurs even if the LD
+in the source populations themselves is negligible. The linkage disequilibrium
+in the admixed population then fluctuates in the generations after its founding,
+decreasing as a result of drift and recombination, or increasing because of
+additional waves of migration. From the LD present in a modern day admixed
+population, it is possible to make inferences about the population's admixture
+history. This insight was first used in the program ROLLOFF
+\cite{moorjani2011history} and was later extended by ALDER
+\cite{loh2013inferring}.
 
-These two methods use the fact that if an admixed population takes in no additional migrants after the founding generation, the LD present in the population is expected to decay exponentially as a function of distance. The rate constant of this exponential decay is proportional to the age of the founding admixture pulse and so can be used as an estimator. ROLLOFF and ALDER are well suited for inferring the time of the admixture event when the population's admixture history can be approximated as a single pulse. However, it can be important to estimate parameters for admixture histories involving multiple pulses, such as estimating the date of Native American admixture in Rapa Nui \cite{moreno2014genome} or determining migration patterns in the Americas \cite{gravel2013reconstructing}. In these instances the expected decay of LD will become a mixture of exponentials. ROLLOFF and ALDER have limited resolution, as they can usually only infer the date of the most recent migration wave \cite{moorjani2011history}, or reject the hypothesis of a single pulse admixture \cite{loh2013inferring}.
+These two methods use the fact that if an admixed population takes in no
+additional migrants after the founding generation, the LD present in the
+population is expected to decay exponentially as a function of distance. The
+rate constant of this exponential decay is proportional to the age of the
+founding admixture pulse and so can be used as an estimator. ROLLOFF and ALDER
+are well suited for inferring the time of the admixture event when the
+population's admixture history can be approximated as a single pulse. However,
+it can be important to estimate parameters for admixture histories involving
+multiple pulses, such as estimating the date of Native American admixture in
+Rapa Nui \cite{moreno2014genome} or determining migration patterns in the
+Americas \cite{gravel2013reconstructing}. In these instances the expected decay
+of LD will become a mixture of exponentials. ROLLOFF and ALDER have limited
+resolution, as they can usually only infer the date of the most recent migration
+wave \cite{moorjani2011history}, or reject the hypothesis of a single pulse
+admixture \cite{loh2013inferring}.
 
-ROLLOFF and ALDER use the information contained in pairs of sites by examining the two-locus linkage disequilibrium between them. Here we extend the theory underlying the methods in ROLOFF and ADLER to three loci by considering three-locus LD. There are two ways of measuring the linkage between $n$ loci. \cite{bennett1952theory} defines $n$-locus linkage in a way that maintains a geometric decrease of LD each generation as a result of recombination, which is an important property of two-locus linkage disequilibrium. \cite{slatkin1972treating} defines $n$-locus LD  to be the $n$-way covariance, analogously to the property of two locus LD as the covariance in allele frequency between pairs of loci. For two and three loci, these two definitions coincide, but for four or more loci, they do not.
+ROLLOFF and ALDER use the information contained in pairs of sites by examining
+the two-locus linkage disequilibrium between them. Here we extend the theory
+underlying the methods in ROLOFF and ADLER to three loci by considering
+three-locus LD. There are two ways of measuring the linkage between $n$ loci.
+\cite{bennett1952theory} defines $n$-locus linkage in a way that maintains a
+geometric decrease of LD each generation as a result of recombination, which is
+an important property of two-locus linkage disequilibrium.
+\cite{slatkin1972treating} defines $n$-locus LD  to be the $n$-way covariance,
+analogously to the property of two locus LD as the covariance in allele
+frequency between pairs of loci. For two and three loci, these two definitions
+coincide, but for four or more loci, they do not.
 
-In this paper, we will use Bennett and Slatkin's definition of three-locus LD to examine the the decay of ALD for three sites as a function of the genetic distance between them. We derive an equation that describes the decay of three-locus LD under an admixture history with multiple waves of migration. We then compare the results of coalescent simulations to this equation, and develop some guidelines for when admixture histories more complex than a single pulse can be resolved. Finally, we apply our method to the Colombian and Mexican samples in the 1000 Genomes data set, using the Yoruba samples as a reference. Fitting a two-pulse model to data, we estimate admixture histories for the two populations which are qualitatively consistent with the results reported in \cite{gravel2013reconstructing}.
+In this paper, we will use Bennett and Slatkin's definition of three-locus LD to
+examine the the decay of ALD for three sites as a function of the genetic
+distance between them. We derive an equation that describes the decay of
+three-locus LD under an admixture history with multiple waves of migration. We
+then compare the results of coalescent simulations to this equation, and develop
+some guidelines for when admixture histories more complex than a single pulse
+can be resolved. Finally, we apply our method to the Colombian and Mexican
+samples in the 1000 Genomes data set, using the Yoruba samples as a reference.
+Fitting a two-pulse model to data, we estimate admixture histories for the two
+populations which are qualitatively consistent with the results reported in
+\cite{gravel2013reconstructing}.
 
-[Could we say anything here about Neanderthals in Asia?]
+[TODO Could we say anything here about Neanderthals in Asia?]
 
 % You may title this section "Methods" or "Models".
 % "Models" is not a valid title for PLoS ONE authors. However, PLoS ONE
 % authors may use "Analysis"
 \section{Model}
-We use a random union of gametes admixture model as described in \cite{liang2014understanding}, which is an extension of the mechanistic admixture model formulated by \cite{verdu2011general}. In this model, two (or more) source populations contribute migrants to form an admixed population consisting of $2N$ haploid individuals. Each generation in the admixed population is formed through the recombination of randomly selected individuals from the previous generation, with some individuals potentially replaced by migrants from the source populations. For simplicity, we consider a model with only two source populations. Furthermore, the first source population only contributes migrants in the founding generation, $T$. The second source population contributes migrants in the founding generation and possibly in one or more generations thereafter. In generation $i$, for $i=T-1,\dots,0$ (before the present), a fraction $m_i$ of the admixed population is replaced by individuals from the second source population.
+We use a random union of gametes admixture model as described in
+\cite{liang2014understanding}, which is an extension of the mechanistic
+admixture model formulated by \cite{verdu2011general}. In this model, two or
+more source populations contribute migrants to form an admixed population
+consisting of $2N$ haploid individuals. Each generation in the admixed
+population is formed through the recombination of randomly selected individuals
+from the previous generation, with some individuals potentially replaced by
+migrants from the source populations. For simplicity, we consider a model with
+only two source populations. Furthermore, the first source population only
+contributes migrants in the founding generation, $T$. The second source
+population contributes migrants in the founding generation and possibly in one
+or more generations thereafter. In generation $i$, for $i=T-1,\dots,0$ (before
+the present), a fraction $m_i$ of the admixed population is replaced by
+individuals from the second source population.
 
 \section{Linkage Disequilibrium and Local Ancestry}
-ROLLOFF and ALDER use the standard two-locus measure of LD between a SNP at positions $x$ and another SNP at position $y$, which is a genetic distance $d$ to the right,
+ROLLOFF and ALDER use the standard two-locus measure of LD between a SNP at
+positions $x$ and another SNP at position $y$, which is a genetic distance $d$
+to the right,
+
 \begin{align}
-D_2(d) = \text{cov}(H_x,H_y),
-\label{D2}
+	D_2(d) = \text{cov}(H_x,H_y),
+	\label{D2}
 \end{align}
-where $H_x$ and $H_y$ represent the haplotype or genotypes of an admixed chromosome at positions $x$ and $y$. In the case of haplotype data, $H_{i,x}=1$ if the $i^\text{th}$ sample is carrying the derived allele at the SNP at position $x$, and is otherwise 0. Alternatively, for genotype data, $H_{i,x}$ take on values from $\{0,1/2,1\}$ depending on the number of copies of the derived allele the $i^\text{th}$ sample is carrying at SNP position $x$.
-We consider an additional site at position $z$, which is located a further genetic distance $d'$ to the right of $y$. The three-loci LD, as defined by as defined by \cite{bennett1952theory} and \cite{slatkin1972treating}, is given by
+
+where $H_x$ and $H_y$ represent the haplotype or genotypes of an admixed
+chromosome at positions $x$ and $y$. In the case of haplotype data, $H_{i,x}=1$
+if the $i^\text{th}$ sample is carrying the derived allele at the SNP at
+position $x$, and is otherwise 0. Alternatively, for genotype data, $H_{i,x}$
+take on values from $\{0,1/2,1\}$ depending on the number of copies of the
+derived allele the $i^\text{th}$ sample is carrying at SNP position $x$.
+We consider an additional site at position $z$, which is located a further
+genetic distance $d'$ to the right of $y$. The three-loci LD, as defined by as
+defined by \cite{bennett1952theory} and \cite{slatkin1972treating}, is given by
 
 \begin{align}
 	D_3(d,d')
@@ -312,9 +407,9 @@ $$
 $$
 where $B_i$ is the (one-dimensional) discrete Fourier transform of $b$, and $B_i[-j]$ is the $j^\text{th}$ to last most element of $B_i$. Summing over $i$ and taking the inverse discrete Fourier transform, we can approximate the discrete Fourier transform of the numerator of  $\hat{a}$. We use the same method applied to $c$ to approximate the denominator of $\hat{a}$. Because the number of bins is generally much less than the number of segregating sites, the rate-limiting step of this algorithm is the binning step to form $c$ and the $b_i$'s, which is $O(S_n)$, rather than the FFTs, which are $O(P^2\log(P))$.
 
-When using only the admixed population itself as a reference population, the method described above will be biased if the same samples are used to estimate both the linkage disequilibrium coefficients and the weights ($\delta_x$, $\delta_y$, and $\delta_z$). We cannot efficiently compute a polyache statistics like \cite{loh2013inferring}. At the cost of some power, we instead adopt the approach of \cite{pickrell2012inference} and separate the admixed population into two equal-sized groups. We then use one group to estimate the weights, and the other group to estimate linkage disequilibrium coefficients, and vice versa. This gives gives two unbiased estimates for the numerator of $\hat{a}$, which we then average. [Comment: I didn't understand how this works.  Coudl we five more detail?]
+When using only the admixed population itself as a reference population, the method described above will be biased if the same samples are used to estimate both the linkage disequilibrium coefficients and the weights ($\delta_x$, $\delta_y$, and $\delta_z$). We cannot efficiently compute a polyache statistics like \cite{loh2013inferring}. At the cost of some power, we instead adopt the approach of \cite{pickrell2012inference} and separate the admixed population into two equal-sized groups. We then use one group to estimate the weights, and the other group to estimate linkage disequilibrium coefficients, and vice versa. This gives gives two unbiased estimates for the numerator of $\hat{a}$, which we then average. [TODO Comment: I didn't understand how this works.  Coudl we five more detail?]
 \subsection{Fitting the Two-Pulse Model}
-We fit equation \ref{alder_2p} to the estimates of the weighted LD using non-linear least squares, with two modifications. We added a proportionality constant to account for the expected square allele frequency difference between the source populations. We also subtracted out an affine term in the weighted LD which is due to population substructure \cite{loh2013inferring}. We estimated this by computing the three-way covariance between triples of chromosomes. We use the jackknife to obtain confidence intervals for the resulting estimates by leaving out each chromosome in turn and refitting on the data for the remaining chromosomes.  [Comment: again, we need more detail here. These are important parts of the manuscript]
+We fit equation \ref{alder_2p} to the estimates of the weighted LD using non-linear least squares, with two modifications. We added a proportionality constant to account for the expected square allele frequency difference between the source populations. We also subtracted out an affine term in the weighted LD which is due to population substructure \cite{loh2013inferring}. We estimated this by computing the three-way covariance between triples of chromosomes. We use the jackknife to obtain confidence intervals for the resulting estimates by leaving out each chromosome in turn and refitting on the data for the remaining chromosomes.  [TODO Comment: again, we need more detail here. These are important parts of the manuscript]
 \section{Simulations}
 We used the program macs \cite{chen2009fast} to generate two source populations which diverged 4000 generations ago and a coalescent simulation to generate an admixed population from the two source populations according to two-pulse and constant admixture models. We sampled 50 diploid individuals from the admixed and two source populations, each consisting of 20 chromosomes of length 1 Morgan. The effective population size was $2N=1000$ for the admixed population and two source populations. Using a two pulse model, we varied the migration probabilities and timings for each pulse to examine the accuracy of equation \ref{alder_2p}. We also simulated data for a model with a constant rate of admixture each generation, and compared this to the predictions made by equation \ref{cov}.
 \section{Data Set}
@@ -331,7 +426,7 @@ We computed the weighted LD for the Mexican and Columbia populations in the firs
 \label{Ts}
 \end{figure}
 
-[Comment: the color coding should be labeled for all figures.  Also, the y and x-axes should be labeled]
+[TODO: the color coding should be labeled for all figures.  Also, the y and x-axes should be labeled]
 
 \begin{figure}
 \includegraphics[scale=.6]{ms.eps}
@@ -363,7 +458,7 @@ For two pulse models, the effects of the second pulse of migration only become e
 \label{estimates}
 \end{figure}
 
-[Comment: we need  figures showing the similar one-dimensional LD for comparison.  Maybe the first thing to discuss is to show how you can get approximately the same 1D curve for different models which produce different 2D surfaces]
+[TODO Comment: we need  figures showing the similar one-dimensional LD for comparison.  Maybe the first thing to discuss is to show how you can get approximately the same 1D curve for different models which produce different 2D surfaces]
 
 We next evaluate the utility of the method for estimating admixture times.  The qualitative similarities between one pulse and two pulse admixture scenarios seen in the previous  simulations under some parameter settings, will naturally affect  the estimates. As shown in figure \ref{estimates}, when the spacing between the two pulses is small relative to their age, the median of the estimates of the timing of the second pulse is close to the true value, but the interquartile range is large. Moreover, the best fit often lies on a boundary of the parameter space which is equivalent to a one pulse admixture model. When the spacing between the pulses is larger, the estimates for the timing of the older pulse becomes more precise.
 \subsection{1000 Genomes}
