@@ -13,6 +13,8 @@
 
 ## Intermediate documents:
 *.dvi
+*.ps
+*.pdf
 
 ## Bibliography auxiliary files (bibtex/biblatex/biber):
 *.bbl
