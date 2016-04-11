@@ -1,39 +1,8 @@
-% Template for PLoS % Version 2.0 July 2014 % % To compile to pdf, run: % latex
-plos.template % bibtex plos.template % latex plos.template % latex plos.template %
-dvipdf plos.template % % % -- FIGURES AND TABLES % % DO NOT INCLUDE GRAPHICS IN
-YOUR MANUSCRIPT % - Figures should be uploaded separately from your manuscript
-file. % - Figures generated using LaTeX should be extracted and removed from the
-PDF before submission. % - Figures containing multiple panels/subfigures must be
-combined into one image file before submission. % See
-http://www.plosone.org/static/figureGuidelines for PLOS figure guidelines. % %
-Tables should be cell-based and may not contain: % - tabs/spacing/line breaks
-within cells to alter layout % - vertically-merged cells (no tabular
-environments within tabular environments, do not use \multirow) % - colors,
-shading, or graphic objects % See
-http://www.plosone.org/static/figureGuidelines#tables for table guidelines. % %
-For sideways tables, use the {rotating} package and use \begin{sidewaystable}
-instead of \begin{table} in the appropriate section. PLOS guidelines do not
-accomodate sideways figures. % % % % % % % % % % % % % % % % % % % % % % % % % % % --
-EQUATIONS, MATH SYMBOLS, SUBSCRIPTS, AND SUPERSCRIPTS % % IMPORTANT % Below are
-a few tips to help format your equations and other special characters according
-to our specifications. For more tips to help reduce the possibility of
-formatting errors during conversion, please see our LaTeX guidelines at
-http://www.plosone.org/static/latexGuidelines % % Please be sure to include all
-portions of an equation in the math environment, and for any superscripts or
-subscripts also include the base number/text. For example, use $mathrm{mm}^2$
-instead of mm$^2$ (do not use \textsuperscript command). % % DO NOT USE the \rm
-command to render mathmode characters in roman font, instead use $\mathrm{}$ %
-For bolding characters in mathmode, please use $\mathbf{}$ % % Please add line
-breaks to long equations when possible in order to fit our 2-column layout. % %
-For inline equations, please do not include punctuation within the math
-environment unless this is part of the equation. % % For spaces within the math
-environment please use the \; or \: commands, even within \text{} (do not use
-smaller spacing as this does not convert well). % % % % % % % % % % % % % % % % % % % % % % % % % %
-
 \documentclass[10pt]{article}
 
 % amsmath package, useful for mathematical formulas
-\usepackage{graphicx,amsmath} % amssymb package, useful for mathematical symbols
+\usepackage{graphicx,amsmath}
+% amssymb package, useful for mathematical symbols
 \usepackage{amssymb}
 
 % cite package, to clean up citations in the main text. Do not remove.
@@ -41,34 +10,48 @@ smaller spacing as this does not convert well). % % % % % % % % % % % % % % % % 
 
 \usepackage{hyperref}
 
-% line numbers \usepackage{lineno}
+% line numbers
+\usepackage{lineno}
 
-% ligatures disabled \usepackage{microtype} \DisableLigatures[f]{encoding = *,
-family = * }
+% ligatures disabled
+\usepackage{microtype}
+\DisableLigatures[f]{encoding = *, family = * }
 
-% rotating package for sideways tables %\usepackage{rotating}
+% rotating package for sideways tables
+% \usepackage{rotating}
 
-% If you wish to include algorithms, please use one of the packages below. Also,
-please see the algorithm section of our LaTeX guidelines
-(http://www.plosone.org/static/latexGuidelines) for important information about
-required formatting. %\usepackage{algorithmic} %\usepackage{algorithmicx}
+% If you wish to include algorithms, please use one of the packages below.
+% Also, please see the algorithm section of our LaTeX guidelines
+% (http://www.plosone.org/static/latexGuidelines) for important information about
+% required formatting.
+% \usepackage{algorithmic}
+% \usepackage{algorithmicx}
 
-% Use doublespacing - comment out for single spacing %\usepackage{setspace}
-%\doublespacing
+% Use doublespacing - comment out for single spacing
+% \usepackage{setspace}
+% \doublespacing
 
-% Text layout \topmargin 0.0cm \oddsidemargin 0.5cm \evensidemargin 0.5cm
-\textwidth 16cm \textheight 21cm
+% Text layout
+\topmargin 0.0cm
+\oddsidemargin 0.5cm
+\evensidemargin 0.5cm
+\textwidth 16cm
+\textheight 21cm
 
 % Bold the 'Figure #' in the caption and separate it with a period % Captions
-will be left justified
+% will be left justified
 \usepackage[labelfont=bf,labelsep=period,justification=raggedright]{caption}
 
-% Use the PLoS provided BiBTeX style \bibliographystyle{plos2015}
+% Use the PLoS provided BiBTeX style
+\bibliographystyle{plos2015}
 
-% Remove brackets from numbering in List of References \makeatletter
-\renewcommand{\@biblabel}[1]{\quad#1.} \makeatother
+% Remove brackets from numbering in List of References
+\makeatletter
+\renewcommand{\@biblabel}[1]{\quad#1.}
+\makeatother
 
-% Leave date blank \date{}
+% Leave date blank
+\date{}
 
 \pagestyle{myheadings}
 
@@ -78,15 +61,21 @@ will be left justified
 
 \begin{document}
 
-% Title must be 150 characters or less \begin{flushleft} {\Large \textbf{????} } %
-Insert Author names, affiliations and corresponding author email. \\ Mason
-Liang$^{1,\ast}$, Rasmus Nielsen$^{2}$ \\ \bf{1} Mason Liang Integrative
-Biology, University of California, Berkeley, California, United States of
-America \\ \bf{1} Rasmus Nielsen Integrative Biology, University of California,
-Berkeley, California, United States of America \\ $\ast$ E-mail:
-wmliang@berkeley.edu \end{flushleft}
+% Title must be 150 characters or less
+\begin{flushleft}
+	{\Large \textbf{????} } \\
 
-% Please keep the abstract between 250 and 300 words \section*{Abstract}
+	%Insert Author names, affiliations and corresponding author email.
+ 	Mason Liang$^{1,\ast}$,
+	Rasmus Nielsen$^{2}$\\
+
+	\bf{1} Mason Liang Integrative Biology, University of California, Berkeley, California, United States of America\\
+	\bf{1} Rasmus Nielsen Integrative Biology, University of California, Berkeley, California, United States of America\\
+	$\ast$ E-mail: wmliang@berkeley.edu
+\end{flushleft}
+
+% Please keep the abstract between 250 and 300 words
+\section*{Abstract}
 Estimating admixture histories is crucial for understanding the genetic
 diversity we see in present-day populations. Existing allele frequency or
 phylogeny-based methods are excellent for inferring the existence of admixture
@@ -94,7 +83,7 @@ or its proportions, but have less power for estimating admixture times. Recently
 introduced approaches for estimating these times use spatial information from
 admixed chromosomes, such as the local ancestry or the decay of admixture
 linkage disequilibrium (ALD).  One popular method, implemented in the programs
-ALDER and ROLOFF, uses two-locus ALD to infer the time of a single admixture
+ALDER and ROLLOFF, uses two-locus ALD to infer the time of a single admixture
 event, but is only able to estimate the time of the most recent admixture event
 based on this summary statistic.  We derive analytical expressions for the
 expected ALD in a three-locus system and provide a new statistical method based
@@ -103,25 +92,37 @@ Using simulations, we show how this new statistic behaves on a range of
 admixture histories. As an example, we also apply our method to the Colombian
 and Mexican samples from the 1000 Genomes project.
 
-\section*{Introduction} There are many methods for inferring the presence of
+\section*{Introduction}
+There are many methods for inferring the presence of
 admixture, e.g. methods using simple summary statistics detecting deviations
 from phylogenetic symmetry \cite{reich2009reconstructing} [TODO(mason) Also cite
 patterson paper and paper from Monty's group], methods estimating admixture
 proportions with programs such as Structure \cite{pritchard2000inference},
-Admixture \cite{alexander2009fast} or RFmic [cite] [TODO comment: we might want
-to make sure to add more citations here, for example all the ones from our
-previous papers and the ones from the ALDER paper. People like to see themselves
-cited]. However, there has been less research on estimating admixture times,
+Admixture \cite{alexander2009fast} or RFmix \cite{maples2013rfmix}. However,
+there has been less research on estimating admixture times,
 possibly because such methods require data which were unavailable until the
 advent of high-throughput next generation sequencing. Some recently developed
 methods use the inferred local ancestry of sequences to construct admixture
-tract length distributions [TODO cite Pool Nielsen, Gravel and yourself]. Over
-time, recombination is expected to decrease the average lengths of admixture
+tract length distributions, such as \cite{pool2009inference},
+\cite{gravel2012population}, and \cite{liang2014lengths}.
+Over time, recombination is expected to decrease the average lengths of admixture
 tracts. The length distribution of admixture tracts is therefore informative
 about the time since admixture.  Much of the theory relating to tracts lengths
 is based on Fisher's famous theory of junctions \cite{fisher1949theory} and
-subsequent work by Stam \cite{stam1980distribution} and others [TODO add as many
-citations here as possible]. For example, \cite{baird2003distribution} first
+subsequent work, such as
+\cite{
+	stam1980distribution,
+	guo1994computation,
+	bickeboller1996distribution,
+	bickeboller1996probability,
+	stefanov2000distribution,
+	ball2005evaluation,
+	cannings2003identity,
+	dimitropoulou2003recsim,
+	walters2005probability,
+	rodolphe2008theoretical
+}.
+For example, \cite{baird2003distribution} first
 discussed the length distribution of tracts descended from a single ancestor.
 These results informed later analyses of admixture tract length distribution,
 such as \cite{pool2009inference}, \cite{gravel2012population}, and
@@ -163,7 +164,7 @@ admixture \cite{loh2013inferring}.
 
 ROLLOFF and ALDER use the information contained in pairs of sites by examining
 the two-locus linkage disequilibrium between them. Here we extend the theory
-underlying the methods in ROLOFF and ADLER to three loci by considering
+underlying the methods in ROLLOFF and ADLER to three loci by considering
 three-locus LD. There are two ways of measuring the linkage between $n$ loci.
 \cite{bennett1952theory} defines $n$-locus linkage in a way that maintains a
 geometric decrease of LD each generation as a result of recombination, which is
@@ -565,16 +566,25 @@ more readily available, this disadvantage should disappear.
 
 \bibliography{thesis}
 
-\begin{figure} \includegraphics[scale=.6]{alder_Ts.eps} \caption{ {\bf Extra
-figure} Corresponding alder curves for two-pulse admixture with varying pulse
-times. Morgans on $x$-axis and $\log$ Alder scores on $y$-axis. Red lines are
-$T_2=2$, Green lines $T_2=5$, and blue lines are $T_2=10$. } \end{figure}
+\begin{figure}
+	\includegraphics[scale=.6]{alder_Ts.eps}
+	\caption{
+		{\bf Extra figure}
+		Corresponding Alder curves for two-pulse admixture with varying pulse times.
+		Morgans on $x$-axis and $\log$ Alder scores on $y$-axis. Red lines are
+		$T_2=2$, Green lines $T_2=5$, and blue lines are $T_2=10$.
+	}
+\end{figure}
 
-\begin{figure} \includegraphics[scale=.6]{alder_ms.eps} \caption{ {\bf Extra
-figure} Corresponding alder curves for two-pulse admixture with varying
-migration probabilities. Morgans on $x$-axis and $\log$ Alder scores on
-$y$-axis. Increasing red values are higher $M_1$'s and increasing green values
-are higher $M_2$'s  (I will probably need to choose a better color scheme for
-this). } \end{figure}
+\begin{figure}
+	\includegraphics[scale=.6]{alder_ms.eps}
+	\caption{
+		{\bf Extra figure}
+		Corresponding alder curves for two-pulse admixture with varying migration
+		probabilities. Morgans on $x$-axis and $\log$ Alder scores on $y$-axis.
+		Increasing red values are higher $M_1$'s and increasing green values are
+		higher $M_2$'s  (TODO: choose better colors).
+	}
+\end{figure}
 
 \end{document}
