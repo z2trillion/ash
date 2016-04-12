@@ -349,36 +349,71 @@ disequilibrium coefficient is then \begin{align*} \hat{a}[d,d']&=
 \delta_x\delta_y\delta_z(H_{i,x}-f_x)(H_{i,y}-f_y)(H_{i,z}-f_z)}{(n-1)(n-2)}.
 \end{align*}
 
-\section{Algorithm} Directly computing $\hat{a}[d,d']$ over the set $d,d'\in
-\{0,1,\dots,P\}^2$ would be cubic in the number of segregating sites, but as is
-the case with ALDER, we can use using a fast Fourier transform (FFT) to
-approximate $\hat{a}$, giving an algorithm whose run-time is instead linear in
-the number of segregating sites. We first rearrange $\hat{a}$ to get
-\begin{align*} \hat{a}[d,d'] &=\frac{n}{(n-1)(n-2)}
-\frac{\sum_{i=1}^n\sum_{x,y,z\in S[d,d']}
-\delta_x\delta_y\delta_z(H_{i,x}-f_x)(H_{i,y}-f_y)(H_{i,z}-f_z)} {\sum_{x,y,z\in
-S[d,d']}1}, \end{align*} and define sequences $b_i[d]$ and $c[d]$ by binning the
-data and then doubling the length by padding with $P$ zeros, \begin{align*}
-b_i[d] &= \left\{ \begin{array}{ll} \sum_{x: d\leq \lfloor{x}\rfloor <
-d+1}\delta_x(H_{i,x}-f_x) & : 0\leq d < P\\ 0 & : P\leq d <2P \end{array}
-\right.\\ c[d] &= \left\{ \begin{array}{ll} |\{x: d\leq \lfloor{x}\rfloor <
-d+1\}| & : 0\leq d < P\\ 0 & : P\leq d <2P \end{array} \right. \end{align*} We
-can approximate $|S[d,d']|$ and the $n$ sums in the numerator of $\hat{a}[d,d']$
-in terms of convolutions of these sequences: $$ |S[d,d']| \approx \sum_{w=0}^P
-c[w]c[w+d]c[w+d+d'] $$ $$ \sum_{x,y,z\in
-S[d,d']}\delta_x\delta_y\delta_z(H_{i,x}-f_x)(H_{i,y}-f_y)(H_{i,z}-f_z) \approx
-\sum_{w=0}^P b_i[w]b_i[w+d]b_i[w+d+d']. $$ These convolutions can be efficiently
-computed with an FFT, since under a two-dimensional discrete Fourier transform, $$
-\sum_{w=0}^P b_i[w]b_i[w+d]b_i[w+d+d'] \leftrightarrow
-B_i[j]\bar{B_i}[k]B_i[k-j], $$ where $B_i$ is the (one-dimensional) discrete
-Fourier transform of $b$, and $B_i[-j]$ is the $j^\text{th}$ to last most
-element of $B_i$. Summing over $i$ and taking the inverse discrete Fourier
-transform, we can approximate the discrete Fourier transform of the numerator of
-$\hat{a}$. We use the same method applied to $c$ to approximate the denominator
-of $\hat{a}$. Because the number of bins is generally much less than the number
-of segregating sites, the rate-limiting step of this algorithm is the binning
-step to form $c$ and the $b_i$'s, which is $O(S_n)$, rather than the FFTs, which
-are $O(P^2\log(P))$.
+\section{Algorithm}
+Directly computing $\hat{a}[d,d']$ over the set $d,d'\in \{0,1,\dots,P\}^2$
+would be cubic in the number of segregating sites. However, by using the fast
+Fourier Transform (FFT) technique introduced in ALDER \cite{loh2013inferring},
+we can approximate $\hat{a}$ with an algorithm whose time complexity is instead
+linear in the number of segregating sites.
+
+First, rearrange $\hat{a}$ to get
+\begin{align*}
+	\hat{a}[d,d'] &=
+	\frac{n}{(n-1)(n-2)}
+	\frac{
+		\sum_{i=1}^n \sum_{x,y,z\in S[d,d']}
+		\delta_x \delta_y \delta_z (H_{i,x} - f_x) (H_{i,y} - f_y) (H_{i,z} - f_z)
+	}{
+		\sum_{x,y,z \in S[d,d']}
+		1
+	},
+\end{align*}
+and define sequences $b_i[d]$ and $c[d]$ by binning the data and then doubling
+the length by padding with $P$ zeros,
+\begin{align*}
+	b_i[d] &=
+	\left\{
+		\begin{array}{ll}
+			\sum_{x: d\leq \lfloor{x}\rfloor < d+1} \delta_x(H_{i,x}-f_x) & : 0 \leq d < P\\
+			0 & : P\leq d <2P
+		\end{array}
+	\right.\\
+	c[d] &=
+	\left\{
+		\begin{array}{ll}
+			|\{x: d\leq \lfloor{x}\rfloor < d+1\}| & : 0\leq d < P\\
+			0 & : P\leq d <2P
+		\end{array}
+	\right.
+\end{align*}
+We can approximate $|S[d,d']|$ and the $n$ sums in the numerator of
+$\hat{a}[d,d']$ in terms of convolutions of these sequences:
+$$
+	|S[d,d']| \approx \sum_{w=0}^P c[w]c[w+d]c[w+d+d']
+$$
+$$
+	\sum_{x,y,z\in S[d,d']}
+	\delta_x\delta_y\delta_z(H_{i,x}-f_x)(H_{i,y}-f_y)(H_{i,z}-f_z)
+	\approx
+	\sum_{w=0}^P b_i[w]b_i[w+d]b_i[w+d+d'].
+$$
+These convolutions can be efficiently
+computed with an FFT, since under a two-dimensional discrete Fourier transform
+from $(d, d')$-space to $(j, k)$-space,
+$$
+\sum_{w=0}^P b_i[w]b_i[w+d]b_i[w+d+d']
+\leftrightarrow
+B_i[j]\bar{B_i}[k]B_i[k-j],
+$$
+where $B_i$ is the one-dimensional discrete Fourier transform of $b$ and for
+$j>0$, $B_i[-j]$ is the $j^\text{th}$ to last most element of $B_i$.
+Summing over $i$ and taking the inverse discrete Fourier transform, we can
+approximate the discrete Fourier transform of the numerator of $\hat{a}$. We
+apply the same method to $c$ to approximate the denominator of $\hat{a}$.
+
+The time complexities for the binning and the FFT's are $O(S_n)$ and
+$O(P^2\log(P))$. Of these two, the first term will dominate, because the number
+of bins much less than the number of segregating sites.
 
 When using only the admixed population itself as a reference population, the
 method described above will be biased if the same samples are used to estimate
