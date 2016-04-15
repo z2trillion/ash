@@ -316,7 +316,7 @@ function is given by \begin{align}
 
 \section{Weighted Linkage Disequilibrium} As \cite{loh2013inferring} noted, we
 cannot use the LD in the admixed population directly, because the allele
-frequency differences in the source populations can be of either sign. As in As
+frequency differences in the source populations can be of either sign. As in
 \cite{loh2013inferring} , we solve this problem by computing the product of the
 values of the three-point linkage disequilibrium coefficient with the product of
 the allele frequency differences. Using equation \ref{local_ancestry} we obtain $$
@@ -330,7 +330,7 @@ population, while the $\delta$'s are estimated from reference populations which
 are closely related to the two source populations. We notice that both this
 approach, as well as the previous approaches (e.g., \cite{loh2013inferring} ),
 does not take genetic drift in the source populations after the time of
-admixture into account, i.e. there is an assumption of both this mehtod and
+admixture into account, i.e. there is an assumption of both this method and
 previous methods that the allele frequencies in the ancestral source populations
 can be approximated well using the allele frequencies in the extant populations.
 
@@ -412,8 +412,10 @@ approximate the discrete Fourier transform of the numerator of $\hat{a}$. We
 apply the same method to $c$ to approximate the denominator of $\hat{a}$.
 
 The time complexities for the binning and the FFT's are $O(S_n)$ and
-$O(P^2\log(P))$. Of these two, the first term will dominate, because the number
-of bins much less than the number of segregating sites.
+$O(P^2\log(P))$. Of these two, the first term will dominate, because $P$, the
+number of bins, much less than $S_n$, the number of segregating sites.
+
+When only one source population is available,
 
 When using only the admixed population itself as a reference population, the
 method described above will be biased if the same samples are used to estimate
