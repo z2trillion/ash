@@ -329,25 +329,38 @@ approximately $d$ and $d'$. The LD term is estimated from the admixed
 population, while the $\delta$'s are estimated from reference populations which
 are closely related to the two source populations. We notice that both this
 approach, as well as the previous approaches (e.g., \cite{loh2013inferring} ),
-does not take genetic drift in the source populations after the time of
+do not take genetic drift in the source populations after the time of
 admixture into account, i.e. there is an assumption of both this method and
 previous methods that the allele frequencies in the ancestral source populations
 can be approximated well using the allele frequencies in the extant populations.
 
 We arrange the data from the admixed samples in an $n\times S_n $ matrix
 $\mathbf{H}$, where $n$ is the number of admixed haplotypes/genotypes, and $S_n$
-is the number of segregating sites in the sample. For ease of notation, we
-assume that the positions are given in units which make the unit interval equal
-to the desired bin resolution.
+is the number of markers in the sample. Similarly, we arrange the data from the
+two source populations into two matrices, $\mathbf{F}$ and $\mathbf{G}$,
+which are of size $n_1\times S_n$ and $n_2\times S_n$, where $n_1$ and $n_2$ are
+the numbers of samples from each of the source populations.
+For ease of notation, we assume that the positions are given in units which make
+the unit interval equal to the desired bin width.
 
-For a given $d$ and $d'$ the set of SNP triples we use in the estimator for the
-weighted LD is $$ S[d,d'] = \left\{x,y,z: d\leq  x-y < d+1 \text{ and } d' \leq
+For a given $d$ and $d'$ the SNP triples we use in the estimator for the
+weighted LD are $$ S[d,d'] = \left\{x,y,z: d\leq  x-y < d+1 \text{ and } d' \leq
 y-z < d'+1 \right\}. $$ Let $f_x$ be empirical allele frequency in the admixed
-population. An unbiased estimator of the weighted three-point linkage
-disequilibrium coefficient is then \begin{align*} \hat{a}[d,d']&=
-\frac{1}{|S[d,d']|} \sum_{x,y,z\in S[d,d']}\frac{n\sum_{i=1}^n
-\delta_x\delta_y\delta_z(H_{i,x}-f_x)(H_{i,y}-f_y)(H_{i,z}-f_z)}{(n-1)(n-2)}.
+population. An estimator of the weighted three-point linkage disequilibrium
+coefficient is then
+\begin{align*}
+	\hat{a}[d,d']&=
+	\frac{1}{|S[d,d']|}
+	\sum_{x,y,z\in S[d,d']}
+		\frac{n\sum_{i=1}^n
+		\hat{\delta_x}\hat{\delta_y}\hat{\delta_z}
+		(H_{i,x}-f_x)(H_{i,y}-f_y)(H_{i,z}-f_z)}{(n-1)(n-2)},
 \end{align*}
+where
+$$
+	\hat{delta_x} = \sum_{i=1}^{n_1} F_{i,x} - \sum_{i=1}^{n_2} G_{i,x},
+$$
+and similarly for $\hat{delta_y}$ and $\hat{delta_z}$.
 
 \section{Algorithm}
 Directly computing $\hat{a}[d,d']$ over the set $d,d'\in \{0,1,\dots,P\}^2$
@@ -362,7 +375,8 @@ First, rearrange $\hat{a}$ to get
 	\frac{n}{(n-1)(n-2)}
 	\frac{
 		\sum_{i=1}^n \sum_{x,y,z\in S[d,d']}
-		\delta_x \delta_y \delta_z (H_{i,x} - f_x) (H_{i,y} - f_y) (H_{i,z} - f_z)
+		\hat{\delta_x} \hat{\delta_y} \hat{\delta_z}
+		(H_{i,x} - f_x) (H_{i,y} - f_y) (H_{i,z} - f_z)
 	}{
 		\sum_{x,y,z \in S[d,d']}
 		1
@@ -374,7 +388,7 @@ the length by padding with $P$ zeros,
 	b_i[d] &=
 	\left\{
 		\begin{array}{ll}
-			\sum_{x: d\leq \lfloor{x}\rfloor < d+1} \delta_x(H_{i,x}-f_x) & : 0 \leq d < P\\
+			\sum_{x: d\leq \lfloor{x}\rfloor < d+1} \hat{\delta_x}(H_{i,x}-f_x) & : 0 \leq d < P\\
 			0 & : P\leq d <2P
 		\end{array}
 	\right.\\
@@ -393,7 +407,8 @@ $$
 $$
 $$
 	\sum_{x,y,z\in S[d,d']}
-	\delta_x\delta_y\delta_z(H_{i,x}-f_x)(H_{i,y}-f_y)(H_{i,z}-f_z)
+	\hat{\delta_x} \hat{\delta_y} \hat{\delta_z}
+	(H_{i,x}-f_x)(H_{i,y}-f_y)(H_{i,z}-f_z)
 	\approx
 	\sum_{w=0}^P b_i[w]b_i[w+d]b_i[w+d+d'].
 $$
@@ -415,7 +430,11 @@ The time complexities for the binning and the FFT's are $O(S_n)$ and
 $O(P^2\log(P))$. Of these two, the first term will dominate, because $P$, the
 number of bins, much less than $S_n$, the number of segregating sites.
 
-When only one source population is available,
+When samples only one source population is available, it is still possible to
+estimate the weighted admixture linkage disequalibrium by using difference in
+allele frequencies between the one source population and the admixed population
+as a proxy for the difference in allele frequencies between the sampled source
+population and the missing one, \cite{pickrell2012inference, loh2013inferring}.
 
 When using only the admixed population itself as a reference population, the
 method described above will be biased if the same samples are used to estimate
